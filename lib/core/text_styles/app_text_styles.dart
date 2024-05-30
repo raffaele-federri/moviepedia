@@ -9,9 +9,14 @@ class AppTextStyles {
     color: AppColors.white,
     fontWeight: FontWeight.w500,
   );
-  static final white24w500 = GoogleFonts.poppins(
-    fontSize: 24,
+  static final white14w400 = GoogleFonts.poppins(
+    fontSize: 14,
     color: AppColors.white,
-    fontWeight: FontWeight.w500,
+    fontWeight: FontWeight.w400,
+  );static final blue14w400 = GoogleFonts.poppins(
+    fontSize: 14,
+    color: AppColors.bottomNavItemSelected,
+    fontWeight: FontWeight.w400,
   );
+
 }

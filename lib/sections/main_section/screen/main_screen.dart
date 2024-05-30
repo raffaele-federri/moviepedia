@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:movies_app/core/themes/custom_shape.dart';
+import 'package:movies_app/sections/home_section/bloc/categories_cubit/categories_cubit.dart';
 import 'package:movies_app/sections/home_section/screen/home_screen.dart';
 import 'package:movies_app/sections/main_section/bloc/bottom_nav_bar_cubit/bottom_nav_bar_cubit.dart';
 import 'package:movies_app/sections/searching_section/screen/searching_screen.dart';
@@ -18,13 +18,24 @@ class MainScreen extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => BottomNavBarCubit(),
+        ), BlocProvider(
+          create: (context) => CategoriesCubit(),
         ),
       ],
       child: BlocBuilder<BottomNavBarCubit, int>(
         builder: (context, state) {
           return Scaffold(
             bottomNavigationBar: Container(
-              color: Colors.cyan,
+              decoration: const BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                    color: AppColors.bottomNavItemSelected,
+                    // Change color as needed
+                    width: 1, // Change thickness as needed
+                  ),
+                ),
+                color: Colors.transparent,
+              ),
               height: 78,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -65,7 +76,9 @@ class MainScreen extends StatelessWidget {
           SvgPicture.asset(
             'assets/icons/nav_ic_${index + 1}.svg',
             colorFilter: ColorFilter.mode(
-              state == index ? AppColors.white : AppColors.scaffold,
+              state == index
+                  ? AppColors.bottomNavItemSelected
+                  : AppColors.bottomNavItemUnselected,
               BlendMode.srcIn,
             ),
           ),
@@ -74,7 +87,9 @@ class MainScreen extends StatelessWidget {
             title,
             style: TextStyle(
               fontSize: 12,
-              color: state == index ? AppColors.white : AppColors.scaffold,
+              color: state == index
+                  ? AppColors.bottomNavItemSelected
+                  : AppColors.bottomNavItemUnselected,
             ),
           ),
         ],
