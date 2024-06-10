@@ -1,3 +1,4 @@
+import 'package:chuck_interceptor/chuck.dart';
 import 'package:flutter/material.dart';
 
 import 'package:gap/gap.dart';
@@ -8,6 +9,7 @@ sealed class AppUtils {
   AppUtils._();
 
   static const kSpacer = Spacer();
+
 
   static const kGap = Gap(0);
   static const kGap4 = Gap(4);

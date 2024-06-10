@@ -1,20 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/sections/home_section/widgets/categories_item.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/sections/home_section/bloc/get_movies_bloc/get_movies_bloc.dart';
+import 'package:movies_app/sections/home_section/widgets/categories_grid.dart';
 
-class NowPlaying extends StatelessWidget {
-  final int itemCount;
-  const NowPlaying({super.key, required this.itemCount});
+class NowPlaying extends StatefulWidget {
+  const NowPlaying({super.key});
+
+  @override
+  State<NowPlaying> createState() => _NowPlayingState();
+}
+
+class _NowPlayingState extends State<NowPlaying> {
+  @override
+  void initState() {
+    context.read<GetMoviesBloc>().add(const GetNowPlayingEvent());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return   GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: itemCount,
-        gridDelegate:
-        const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2),
-        itemBuilder: (context, index) {
-          return const CategoriesItem();
-        });
+    return BlocBuilder<GetMoviesBloc, GetMoviesState>(
+      builder: (context, state) {
+        return state.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SizedBox(
+                height: state.nowPlaying.length * 125,
+                child: CategoriesGrid(
+                  itemCount: state.nowPlaying.length,
+                  results: state.nowPlaying,
+                ),
+              );
+      },
+    );
   }
 }

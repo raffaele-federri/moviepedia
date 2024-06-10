@@ -1,7 +1,10 @@
+import 'package:chuck_interceptor/chuck.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:movies_app/sections/home_section/bloc/categories_cubit/categories_cubit.dart';
+import 'package:movies_app/sections/home_section/bloc/get_movie_details_bloc/get_movie_details_bloc.dart';
+import 'package:movies_app/sections/home_section/bloc/get_movies_bloc/get_movies_bloc.dart';
 import 'package:movies_app/sections/home_section/screen/home_screen.dart';
 import 'package:movies_app/sections/main_section/bloc/bottom_nav_bar_cubit/bottom_nav_bar_cubit.dart';
 import 'package:movies_app/sections/searching_section/screen/searching_screen.dart';
@@ -18,8 +21,14 @@ class MainScreen extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => BottomNavBarCubit(),
-        ), BlocProvider(
+        ),
+        BlocProvider(
           create: (context) => CategoriesCubit(),
+        ),
+        BlocProvider(
+          create: (context) => GetMoviesBloc(),
+        ),BlocProvider(
+          create: (context) => GetMovieDetailsBloc(),
         ),
       ],
       child: BlocBuilder<BottomNavBarCubit, int>(

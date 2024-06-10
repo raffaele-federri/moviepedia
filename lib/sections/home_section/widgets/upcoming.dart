@@ -1,20 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/sections/home_section/widgets/categories_item.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/sections/home_section/bloc/get_movies_bloc/get_movies_bloc.dart';
+import 'package:movies_app/sections/home_section/widgets/categories_grid.dart';
 
-class Upcoming extends StatelessWidget {
-  final int itemCount;
-  const Upcoming({super.key, required this.itemCount});
+class Upcoming extends StatefulWidget {
+  const Upcoming({super.key});
+
+  @override
+  State<Upcoming> createState() => _UpcomingState();
+}
+
+class _UpcomingState extends State<Upcoming> {
+  @override
+  void initState() {
+    context.read<GetMoviesBloc>().add(const GetUpcomingEvent());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return   GridView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: itemCount,
-        gridDelegate:
-        const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2),
-        itemBuilder: (context, index) {
-          return const CategoriesItem();
-        });
+    return BlocBuilder<GetMoviesBloc, GetMoviesState>(
+      builder: (context, state) {
+        return state.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SizedBox(
+                height: state.upcoming.length * 125,
+                child: CategoriesGrid(
+                  itemCount: state.upcoming.length,
+                  results: state.upcoming,
+                ),
+              );
+      },
+    );
   }
 }
