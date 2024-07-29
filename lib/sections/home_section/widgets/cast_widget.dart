@@ -18,8 +18,8 @@ class CastWidget extends StatelessWidget {
         return state.isCastLoading
             ? const CastShimmer()
             : GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
+                // shrinkWrap: true,
+                // physics: const NeverScrollableScrollPhysics(),
                 itemCount: state.cast.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
@@ -35,7 +35,7 @@ class CastWidget extends StatelessWidget {
                           backgroundColor: AppColors.scaffold,
                           foregroundImage: cast[index].profilePath != null
                               ? NetworkImage(
-                                  "https://image.tmdb.org/t/p/w500${cast[index].profilePath}")
+                                  "https://image.tmdb.org/t/p/w500${cast[index].profilePath}",)
                               : const NetworkImage(
                                   'https://m.media-amazon.com/images/I/61EGr1YYRCL._AC_UF1000,1000_QL80_DpWeblab_.jpg',
                                 ),

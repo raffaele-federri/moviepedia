@@ -24,6 +24,7 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<GetMoviesBloc, GetMoviesState>(
       builder: (context, state) {
+        final trending = state.trending;
         return state.sliderLoading
             ? const Center(
                 child: AppUtils.kCenterLoading,
@@ -32,7 +33,7 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
                 height: 240,
                 // color: Colors.red,
                 child: CarouselSlider.builder(
-                  itemCount: state.trending.length,
+                  itemCount: trending.length,
                   itemBuilder: (context, index, realIndex) {
                     return InkWell(
                       onTap: () {
@@ -42,14 +43,15 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
                             builder: (_) => BlocProvider.value(
                               value: BlocProvider.of<GetMoviesBloc>(context),
                               child: BlocProvider(
-                                create: (context) => GetMovieDetailsBloc(),
+                                create: (context) => GetMovieDetailsBloc()..add(GetReviewsEvent(trending[index].id ?? 0))
+                                  ..add(GetCastEvent(trending[index].id ?? 0)),
                                 child: const DetailsScreen(),
                               ),
                             ),
                           ),
                         );
                         context.read<GetMoviesBloc>().add(GetDetailsByIdEvent(
-                            id: state.trending[index].id ?? 0));
+                            id: trending[index].id ?? 0));
                       },
                       child: ClipRRect(
                         borderRadius: AppUtils.kBorderRadius12,
@@ -57,7 +59,7 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
                           width: 170,
                           child: Image.network(
                             fit: BoxFit.cover,
-                            "https://image.tmdb.org/t/p/w500${state.trending[index].posterPath ?? ''}",
+                            "https://image.tmdb.org/t/p/w500${trending[index].posterPath ?? ''}",
                           ),
                         ),
                       ),
@@ -66,7 +68,7 @@ class _CarouselSliderWidgetState extends State<CarouselSliderWidget> {
                   options: CarouselOptions(
                     aspectRatio: 15 / 9,
                     autoPlay: true,
-                    viewportFraction: 0.55,
+                    viewportFraction: 0.48,
                     enlargeCenterPage: true,
                     autoPlayInterval: const Duration(seconds: 4),
                     autoPlayAnimationDuration: const Duration(seconds: 1),

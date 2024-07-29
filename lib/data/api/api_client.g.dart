@@ -21,9 +21,9 @@ class _ApiClient implements ApiClient {
   String? baseUrl;
 
   @override
-  Future<NowPlayingResponse> getNowPlaying() async {
+  Future<NowPlayingResponse> getNowPlaying(int page) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'page': page};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio
@@ -48,9 +48,9 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<NowPlayingResponse> getPopular() async {
+  Future<NowPlayingResponse> getPopular(int page) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'page': page};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio
@@ -75,9 +75,9 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<NowPlayingResponse> getTopRated() async {
+  Future<NowPlayingResponse> getTopRated(int page) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'page': page};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio
@@ -102,9 +102,9 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<NowPlayingResponse> getUpComing() async {
+  Future<NowPlayingResponse> getUpComing(int page) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'page': page};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
     final _result = await _dio
@@ -233,6 +233,39 @@ class _ApiClient implements ApiClient {
               baseUrl,
             ))));
     final value = CastResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<SearchResponse> getSearch(
+    int page,
+    String text,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'page': page,
+      r'query': text,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<SearchResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'movie/{id}/credits?language=en-US&page=1',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = SearchResponse.fromJson(_result.data!);
     return value;
   }
 

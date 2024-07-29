@@ -2,6 +2,8 @@ import 'package:movies_app/sections/home_section/data/models/cast_response.dart'
 import 'package:movies_app/sections/home_section/data/models/details_response.dart';
 import 'package:movies_app/sections/home_section/data/models/now_playing_response.dart';
 import 'package:movies_app/sections/home_section/data/models/reviews_response.dart';
+import 'package:movies_app/sections/searching_section/models/search_response.dart';
+import 'package:retrofit/http.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
@@ -12,16 +14,16 @@ abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 
   @GET("movie/now_playing")
-  Future<NowPlayingResponse> getNowPlaying();
+  Future<NowPlayingResponse> getNowPlaying(@Query('page') int page);
 
   @GET("movie/popular")
-  Future<NowPlayingResponse> getPopular();
+  Future<NowPlayingResponse> getPopular(@Query('page') int page);
 
   @GET("movie/top_rated")
-  Future<NowPlayingResponse> getTopRated();
+  Future<NowPlayingResponse> getTopRated(@Query('page') int page);
 
   @GET("movie/upcoming")
-  Future<NowPlayingResponse> getUpComing();
+  Future<NowPlayingResponse> getUpComing(@Query('page') int page);
 
   @GET("trending/movie/day?language=en-US")
   Future<NowPlayingResponse> getTrending();
@@ -34,6 +36,12 @@ abstract class ApiClient {
 
   @GET("movie/{id}/credits?language=en-US&page=1")
   Future<CastResponse> getCast(@Path() int id);
+
+  @GET("movie/{id}/credits?language=en-US&page=1")
+  Future<SearchResponse> getSearch(
+    @Query('page') int page,
+    @Query('query') String text,
+  );
 
 // @GET("statuses/")
 // Future<WorkingStatusResponse> getWorkingStatuses();

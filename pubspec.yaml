@@ -52,11 +52,18 @@ dependencies:
   chuck_interceptor: ^2.1.6
   flutter_local_notifications: ^17.0.0
   shimmer: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
 
 
 dev_dependencies:
+  build_runner: ^2.4.9
   flutter_test:
     sdk: flutter
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/moviepedia.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -80,6 +87,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/icons/
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

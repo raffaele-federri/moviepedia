@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/data/api/api_helper.dart';
 import 'package:movies_app/sections/home_section/data/models/details_response.dart';
@@ -12,11 +13,24 @@ part 'get_movies_event.dart';
 part 'get_movies_state.dart';
 
 class GetMoviesBloc extends Bloc<GetMoviesEvent, GetMoviesState> {
+  int pageNowPlaying = 1;
+  int pagePopular = 1;
+  int pageTopRated = 1;
+  int pageUpcoming = 1;
+  final List<Results> _nowPlaying = [];
+  final List<Results> _upcoming = [];
+  final List<Results> _topRated = [];
+  final List<Results> _popular = [];
+
   GetMoviesBloc() : super(const GetMoviesState()) {
     on<GetNowPlayingEvent>(_getNowPlaying);
+    on<GetMoreNowPlayingEvent>(_getMoreNowPlaying);
     on<GetPopularEvent>(_getPopular);
+    on<GetMorePopularEvent>(_getMorePopular);
     on<GetTopRatedEvent>(_getTopRated);
+    on<GetMoreTopRatedEvent>(_getMoreTopRated);
     on<GetUpcomingEvent>(_getUpcoming);
+    on<GetMoreUpcomingEvent>(_getMoreUpcoming);
     on<GetTrendingEvent>(_getTrending);
     on<GetDetailsByIdEvent>(_getDetails);
   }
@@ -26,28 +40,44 @@ class GetMoviesBloc extends Bloc<GetMoviesEvent, GetMoviesState> {
     Emitter<GetMoviesState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
-    List<Results> events = [];
+
     try {
-      final response = await ApiHelper.getClient().getNowPlaying();
+      final response = await ApiHelper.getClient().getNowPlaying(pageNowPlaying);
       if (response.totalPages != 0) {
-        events = response.results ?? [];
+        _nowPlaying.clear();
+        _nowPlaying.addAll(response.results ?? []);
         emit(
           state.copyWith(
             isLoading: false,
-            nowPlaying: events,
+            nowPlaying: _nowPlaying,
           ),
         );
       }
-    } on SocketException {
-      // emit(const ContactsState.error('No Internet Connection'));
     } catch (e) {
-      // emit(
-      //   ContactsState.error(
-      //     e.toString().contains('401')
-      //         ? 'Incorrect Password'
-      //         : 'Your OTP code has expired',
-      //   ),
-      // );
+      debugPrint(e.toString());
+    }
+  }
+
+  Future<void> _getMoreNowPlaying(
+    GetMoreNowPlayingEvent event,
+    Emitter<GetMoviesState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+
+    try {
+      final response = await ApiHelper.getClient().getNowPlaying(pageNowPlaying + 1);
+      if (response.totalPages != 0) {
+        pageNowPlaying++;
+        _nowPlaying.addAll(response.results ?? []);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            nowPlaying: _nowPlaying,
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 
@@ -58,26 +88,38 @@ class GetMoviesBloc extends Bloc<GetMoviesEvent, GetMoviesState> {
     emit(state.copyWith(isLoading: true));
     List<Results> events = [];
     try {
-      final response = await ApiHelper.getClient().getPopular();
+      final response = await ApiHelper.getClient().getPopular(pageUpcoming);
       if (response.totalPages != 0) {
-        events = response.results ?? [];
+        _popular.addAll(response.results ?? []);
         emit(
           state.copyWith(
             isLoading: false,
-            popular: events,
+            popular: _popular,
           ),
         );
       }
-    } on SocketException {
-      // emit(const ContactsState.error('No Internet Connection'));
+    }  catch (e) {}
+  }
+  Future<void> _getMorePopular(
+      GetMorePopularEvent event,
+      Emitter<GetMoviesState> emit,
+      ) async {
+    emit(state.copyWith(isLoading: true));
+
+    try {
+      final response = await ApiHelper.getClient().getPopular(pagePopular + 1);
+      if (response.totalPages != 0) {
+        pagePopular++;
+        _popular.addAll(response.results ?? []);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            nowPlaying: _popular,
+          ),
+        );
+      }
     } catch (e) {
-      // emit(
-      //   ContactsState.error(
-      //     e.toString().contains('401')
-      //         ? 'Incorrect Password'
-      //         : 'Your OTP code has expired',
-      //   ),
-      // );
+      debugPrint(e.toString());
     }
   }
 
@@ -86,28 +128,40 @@ class GetMoviesBloc extends Bloc<GetMoviesEvent, GetMoviesState> {
     Emitter<GetMoviesState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
-    List<Results> events = [];
     try {
-      final response = await ApiHelper.getClient().getTopRated();
+      final response = await ApiHelper.getClient().getTopRated(pageTopRated);
       if (response.totalPages != 0) {
-        events = response.results ?? [];
+        _topRated.addAll(response.results ?? []);
         emit(
           state.copyWith(
             isLoading: false,
-            topRated: events,
+            topRated: _topRated,
           ),
         );
       }
-    } on SocketException {
-      // emit(const ContactsState.error('No Internet Connection'));
+    }  catch (e) {}
+  }
+
+  Future<void> _getMoreTopRated(
+      GetMoreTopRatedEvent event,
+      Emitter<GetMoviesState> emit,
+      ) async {
+    emit(state.copyWith(isLoading: true));
+
+    try {
+      final response = await ApiHelper.getClient().getTopRated(pageTopRated + 1);
+      if (response.totalPages != 0) {
+        pageTopRated++;
+        _topRated.addAll(response.results ?? []);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            nowPlaying: _topRated,
+          ),
+        );
+      }
     } catch (e) {
-      // emit(
-      //   ContactsState.error(
-      //     e.toString().contains('401')
-      //         ? 'Incorrect Password'
-      //         : 'Your OTP code has expired',
-      //   ),
-      // );
+      debugPrint(e.toString());
     }
   }
 
@@ -116,28 +170,40 @@ class GetMoviesBloc extends Bloc<GetMoviesEvent, GetMoviesState> {
     Emitter<GetMoviesState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
-    List<Results> events = [];
+
     try {
-      final response = await ApiHelper.getClient().getUpComing();
+      final response = await ApiHelper.getClient().getUpComing(pageUpcoming);
       if (response.totalPages != 0) {
-        events = response.results ?? [];
+        _upcoming.addAll(response.results ?? []);
         emit(
           state.copyWith(
             isLoading: false,
-            upcoming: events,
+            upcoming: _upcoming,
           ),
         );
       }
-    } on SocketException {
-      // emit(const ContactsState.error('No Internet Connection'));
+    } catch (e) {}
+  }
+  Future<void> _getMoreUpcoming(
+      GetMoreUpcomingEvent event,
+      Emitter<GetMoviesState> emit,
+      ) async {
+    emit(state.copyWith(isLoading: true));
+
+    try {
+      final response = await ApiHelper.getClient().getUpComing(pageUpcoming + 1);
+      if (response.totalPages != 0) {
+        pageUpcoming++;
+    _upcoming.addAll(response.results ?? []);
+        emit(
+          state.copyWith(
+            isLoading: false,
+            nowPlaying: _upcoming,
+          ),
+        );
+      }
     } catch (e) {
-      // emit(
-      //   ContactsState.error(
-      //     e.toString().contains('401')
-      //         ? 'Incorrect Password'
-      //         : 'Your OTP code has expired',
-      //   ),
-      // );
+      debugPrint(e.toString());
     }
   }
 
@@ -158,17 +224,7 @@ class GetMoviesBloc extends Bloc<GetMoviesEvent, GetMoviesState> {
           ),
         );
       }
-    } on SocketException {
-      // emit(const ContactsState.error('No Internet Connection'));
-    } catch (e) {
-      // emit(
-      //   ContactsState.error(
-      //     e.toString().contains('401')
-      //         ? 'Incorrect Password'
-      //         : 'Your OTP code has expired',
-      //   ),
-      // );
-    }
+    }  catch (e) {}
   }
 
   Future<void> _getDetails(
@@ -188,16 +244,6 @@ class GetMoviesBloc extends Bloc<GetMoviesEvent, GetMoviesState> {
           ),
         );
       }
-    } on SocketException {
-      // emit(const ContactsState.error('No Internet Connection'));
-    } catch (e) {
-      // emit(
-      //   ContactsState.error(
-      //     e.toString().contains('401')
-      //         ? 'Incorrect Password'
-      //         : 'Your OTP code has expired',
-      //   ),
-      // );
-    }
+    } catch (e) {}
   }
 }

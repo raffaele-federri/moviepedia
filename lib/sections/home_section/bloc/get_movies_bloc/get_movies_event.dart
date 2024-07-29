@@ -11,8 +11,22 @@ class GetNowPlayingEvent extends GetMoviesEvent {
   List<Object?> get props => [];
 }
 
+class GetMoreNowPlayingEvent extends GetMoviesEvent {
+  const GetMoreNowPlayingEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class GetPopularEvent extends GetMoviesEvent {
   const GetPopularEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class GetMorePopularEvent extends GetMoviesEvent {
+  const GetMorePopularEvent();
 
   @override
   List<Object?> get props => [];
@@ -25,8 +39,22 @@ class GetTopRatedEvent extends GetMoviesEvent {
   List<Object?> get props => [];
 }
 
+class GetMoreTopRatedEvent extends GetMoviesEvent {
+  const GetMoreTopRatedEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class GetUpcomingEvent extends GetMoviesEvent {
   const GetUpcomingEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class GetMoreUpcomingEvent extends GetMoviesEvent {
+  const GetMoreUpcomingEvent();
 
   @override
   List<Object?> get props => [];

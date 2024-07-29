@@ -7,6 +7,7 @@ import 'package:movies_app/sections/home_section/bloc/get_movie_details_bloc/get
 import 'package:movies_app/sections/home_section/bloc/get_movies_bloc/get_movies_bloc.dart';
 import 'package:movies_app/sections/home_section/screen/home_screen.dart';
 import 'package:movies_app/sections/main_section/bloc/bottom_nav_bar_cubit/bottom_nav_bar_cubit.dart';
+import 'package:movies_app/sections/searching_section/bloc/search_bloc.dart';
 import 'package:movies_app/sections/searching_section/screen/searching_screen.dart';
 import 'package:movies_app/sections/watchlist_section/screen/watchlist_screen.dart';
 
@@ -26,9 +27,16 @@ class MainScreen extends StatelessWidget {
           create: (context) => CategoriesCubit(),
         ),
         BlocProvider(
-          create: (context) => GetMoviesBloc(),
-        ),BlocProvider(
+          create: (context) => GetMoviesBloc()
+            ..add(const GetUpcomingEvent())
+            ..add(const GetTopRatedEvent())
+            ..add(const GetNowPlayingEvent())
+            ..add(const GetPopularEvent()),
+        ),
+        BlocProvider(
           create: (context) => GetMovieDetailsBloc(),
+        ), BlocProvider(
+          create: (context) => SearchBloc(),
         ),
       ],
       child: BlocBuilder<BottomNavBarCubit, int>(
@@ -61,10 +69,10 @@ class MainScreen extends StatelessWidget {
             ),
             body: IndexedStack(
               index: state,
-              children: const [
+              children: [
                 HomeScreen(),
-                SearchingScreen(),
-                WatchlistScreen(),
+                 SearchingScreen(),
+                const WatchlistScreen(),
               ],
             ),
           );

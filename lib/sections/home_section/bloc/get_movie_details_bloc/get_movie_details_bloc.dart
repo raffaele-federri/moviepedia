@@ -33,6 +33,8 @@ class GetMovieDetailsBloc
             reviews: reviews,
           ),
         );
+      } else {
+        emit(state.copyWith(isReviewsEmpty: true , isLoading: false));
       }
     }  catch (e) {
       AppLoggerUtil.e(e.toString());
